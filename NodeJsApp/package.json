@@ -1,0 +1,11 @@
+{
+  "name": "DNSRP",
+  "version": "0.0.1",
+  "description": "Docker Node Spring RabbitMQ Postgres",
+  "author": "Bulat Giniyatillin",
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "amqplib": "*"
+  }
+}

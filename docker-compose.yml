@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:10-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test_db
+    volumes:
+      - db:/var/lib/postgresql/data
+    restart: always
+
+  rabbitmq:
+    image: bulatgin/dnsrp_rabbit
+    hostname: rabbitmq
+    ports:
+      - "15673:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-logs:/var/log/rabbitmq
+    restart: always
+
+  spring-boot:
+    image: bulatgin/dnsrp_spring
+    depends_on:
+      - db
+      - rabbitmq
+    restart: always
+    deploy:
+      replicas: 2
+
+  node:
+    image: bulatgin/dnsrp_node
+    ports:
+      - "8800:8800"
+    depends_on:
+      - rabbitmq
+    restart: always
+
+volumes:
+  db:
+    driver: local
+  rabbitmq-data:
+    driver: local
+  rabbitmq-logs:
+    driver: local
